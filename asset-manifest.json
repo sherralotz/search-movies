@@ -1,26 +1,18 @@
 {
   "files": {
-    "main.css": "/github-pages-reactapp/static/css/main.729566ff.chunk.css",
-    "main.js": "/github-pages-reactapp/static/js/main.3dfb7621.chunk.js",
-    "main.js.map": "/github-pages-reactapp/static/js/main.3dfb7621.chunk.js.map",
-    "runtime-main.js": "/github-pages-reactapp/static/js/runtime-main.665a8490.js",
-    "runtime-main.js.map": "/github-pages-reactapp/static/js/runtime-main.665a8490.js.map",
-    "static/css/2.d59fd6bc.chunk.css": "/github-pages-reactapp/static/css/2.d59fd6bc.chunk.css",
-    "static/js/2.7e874b67.chunk.js": "/github-pages-reactapp/static/js/2.7e874b67.chunk.js",
-    "static/js/2.7e874b67.chunk.js.map": "/github-pages-reactapp/static/js/2.7e874b67.chunk.js.map",
-    "index.html": "/github-pages-reactapp/index.html",
-    "precache-manifest.9fb8d1173cd6648bee3bfd845d37f329.js": "/github-pages-reactapp/precache-manifest.9fb8d1173cd6648bee3bfd845d37f329.js",
-    "service-worker.js": "/github-pages-reactapp/service-worker.js",
-    "static/css/2.d59fd6bc.chunk.css.map": "/github-pages-reactapp/static/css/2.d59fd6bc.chunk.css.map",
-    "static/css/main.729566ff.chunk.css.map": "/github-pages-reactapp/static/css/main.729566ff.chunk.css.map",
-    "static/js/2.7e874b67.chunk.js.LICENSE.txt": "/github-pages-reactapp/static/js/2.7e874b67.chunk.js.LICENSE.txt",
-    "static/media/font-awesome.min.css": "/github-pages-reactapp/static/media/fontawesome-webfont.fee66e71.woff"
+    "main.css": "/search-movies/static/css/main.5c41a12b.css",
+    "main.js": "/search-movies/static/js/main.cb9c7320.js",
+    "static/media/fontawesome-webfont.svg?v=4.7.0": "/search-movies/static/media/fontawesome-webfont.c1e38fd9e0e74ba58f7a.svg",
+    "static/media/fontawesome-webfont.eot": "/search-movies/static/media/fontawesome-webfont.8b43027f47b20503057d.eot",
+    "static/media/fontawesome-webfont.ttf?v=4.7.0": "/search-movies/static/media/fontawesome-webfont.1e59d2330b4c6deb84b3.ttf",
+    "static/media/fontawesome-webfont.woff?v=4.7.0": "/search-movies/static/media/fontawesome-webfont.f691f37e57f04c152e23.woff",
+    "static/media/fontawesome-webfont.woff2?v=4.7.0": "/search-movies/static/media/fontawesome-webfont.20fd1704ea223900efa9.woff2",
+    "index.html": "/search-movies/index.html",
+    "main.5c41a12b.css.map": "/search-movies/static/css/main.5c41a12b.css.map",
+    "main.cb9c7320.js.map": "/search-movies/static/js/main.cb9c7320.js.map"
   },
   "entrypoints": [
-    "static/js/runtime-main.665a8490.js",
-    "static/css/2.d59fd6bc.chunk.css",
-    "static/js/2.7e874b67.chunk.js",
-    "static/css/main.729566ff.chunk.css",
-    "static/js/main.3dfb7621.chunk.js"
+    "static/css/main.5c41a12b.css",
+    "static/js/main.cb9c7320.js"
   ]
 }

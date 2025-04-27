@@ -11,9 +11,11 @@ export default function SearchMovie() {
   const [movies, setMovies] = useState([]);
   const [page, setPage] = useState(1);
   const [hasNextPage, setHasNextPage] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // Debounce the query by 2 seconds
   useEffect(() => {
+    if (query.trim()) setLoading(true);
     const handler = setTimeout(() => {
       setDebouncedQuery(query.trim());
       setPage(1); // Reset page when new query starts
@@ -44,9 +46,10 @@ export default function SearchMovie() {
         setHasNextPage(results.length > 0 && updatedMovies.length < total_results);
         return updatedMovies;
       });
-  
+      setLoading(false); 
     } catch (error) {
       console.error("Failed to fetch movies:", error);
+      setLoading(false);
     }
   }, [debouncedQuery, page]);
   
@@ -73,7 +76,7 @@ export default function SearchMovie() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             name="query"
-            placeholder="i.e. Pitch Perfect"
+            placeholder="Search Movies..."
           />
           {query && (
             <button 
@@ -94,12 +97,15 @@ export default function SearchMovie() {
           ))}
       </div>
 
-      {hasNextPage && (
+      {loading ? (
         <Waypoint onEnter={loadMore}>
           <h1 style={{ textAlign: "center", color: "#fff" }}>Loading...</h1>
         </Waypoint>
-      )}
+      ) : ""}
 
+      {(query && !movies.length && !loading) ? ( 
+                <h1 style={{ textAlign: "center", color: "#fff" }}>No results found</h1>
+              ) : ""} 
       <ScrollToTopBtn />
     </div>
   );

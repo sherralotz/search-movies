@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react"; 
 
 export default function MovieCard(props) {
-  const { movie } = props;
+  const { movie } = props; 
+  const [imageLoaded, setImageLoaded] = useState(false);
   let colorValue = "",
     rating = movie.vote_average.toFixed(1);
   if (rating <= 2) {
@@ -21,39 +22,34 @@ export default function MovieCard(props) {
   };
 
   return (
-    <div className="card">
-      <img
-        className="card__cover"
-        src={`https://image.tmdb.org/t/p/w185_and_h278_bestv2/${movie.poster_path}`}
-        alt={movie.title + " poster"}
-      />
-      <div className="card__details">
-        <div className="card__title" title={movie.title}>
-          {movie.title}
+   
+      <div className="card">
+        <div className="card__image-container">
+          <div className={`card__image-placeholder ${imageLoaded ? 'hidden' : ''}`}></div>
+          <img
+            className={`card__cover ${imageLoaded ? 'fade-in' : 'hidden'}`}
+            src={`https://image.tmdb.org/t/p/w185_and_h278_bestv2/${movie.poster_path}`}
+            alt={movie.title + " poster"}
+            onLoad={() => setImageLoaded(true)}
+          />
         </div>
-
-        {movie.release_date && (
-          <div className="card__year">
-            {new Date(movie.release_date).getFullYear()}
+        <div className="card__details">
+          <div className="card__title" title={movie.title}>
+            {movie.title}
           </div>
-        )}
 
-        {rating && (
-          <div className="card__rating" style={styles}>
-            {rating}
-          </div>
-        )}
+          {movie.release_date && (
+            <div className="card__year">
+              {new Date(movie.release_date).getFullYear()}
+            </div>
+          )}
+
+          {rating && (
+            <div className="card__rating" style={styles}>
+              {rating}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
   );
 }
-/* <div className="card--content">
-    <h3 className="card--title">{movie.title}</h3>
-    <p>
-        <small>RELEASE DATE: {movie.release_date}</small>
-    </p>
-    <p>
-        <small>RATING: {movie.vote_average}</small>
-    </p>
-    <p className="card--desc">{movie.overview}</p>
-    </div> */

@@ -4,6 +4,8 @@ import axios from "axios";
 import { Waypoint } from "react-waypoint";
 import ScrollToTopBtn from "./ScrollToTop";
 import { FaTimes } from "react-icons/fa";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { TMDB_API_KEY } from '../config';
 
 export default function SearchMovie() {
   const [query, setQuery] = useState("");
@@ -12,14 +14,26 @@ export default function SearchMovie() {
   const [page, setPage] = useState(1);
   const [hasNextPage, setHasNextPage] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [doneSearching, setDoneSearching] = useState(false);
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const initialQuery = queryParams.get('q') || ""; 
+  const navigate = useNavigate(); 
 
-  // Debounce the query by 2 seconds
   useEffect(() => {
-    if (query.trim()) setLoading(true);
+    setQuery(initialQuery); 
+  }, [initialQuery]);
+
+  // Debounce the query by 1 second
+  useEffect(() => {  
     const handler = setTimeout(() => {
-      setDebouncedQuery(query.trim());
-      setPage(1); // Reset page when new query starts
-      setMovies([]);
+      if (query.trim()) {
+        setDebouncedQuery(query.trim());
+        setPage(1);  
+        setMovies([]);   
+      }  else{ 
+        clearQuery();   
+      }
     }, 1000);
 
     return () => {
@@ -36,50 +50,68 @@ export default function SearchMovie() {
 
   const fetchMovies = useCallback(async () => {
     if (!debouncedQuery) return;
-  
+
+    setLoading(true); 
     try {
-      const url = `https://api.themoviedb.org/3/search/movie?api_key=5dcf7f28a88be0edc01bbbde06f024ab&language=en-US&query=${debouncedQuery}&page=${page}&include_adult=false`;
+      const apiKey = TMDB_API_KEY;
+      const url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=en-US&query=${debouncedQuery}&page=${page}&include_adult=false`;
       const { data: { results = [], total_results } } = await axios.get(url);
-  
+
       setMovies((prevMovies) => {
         const updatedMovies = [...prevMovies, ...results];
         setHasNextPage(results.length > 0 && updatedMovies.length < total_results);
+        setLoading(false); 
+        setDoneSearching(true); 
         return updatedMovies;
       });
-      setLoading(false); 
+   
     } catch (error) {
       console.error("Failed to fetch movies:", error);
-      setLoading(false);
+      setLoading(false); // Stop loading on error
     }
   }, [debouncedQuery, page]);
-  
 
   const loadMore = () => {
     if (hasNextPage) {
       setPage((prevPage) => prevPage + 1);
     }
   };
+
   const clearQuery = () => {
     setQuery("");
-    setPage(1);  
+    setPage(1);
     setMovies([]);
     setHasNextPage(false);
+    setDoneSearching(false); 
+    const newQueryParams = new URLSearchParams(location.search);
+    newQueryParams.delete('q');
+    navigate(`/?${newQueryParams.toString()}`, { replace: true });
   };
 
-  return (
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!query.trim()) return;
+
+    setDebouncedQuery(query.trim());
+    setPage(1); 
+  };
+
+  return ( 
     <div>
-     <form className="form" onSubmit={(e) => e.preventDefault()}>
-        <div className="input-wrapper ">
+      <form className="form" onSubmit={handleSubmit}>
+        <div className="input-wrapper">
           <input
             className="input"
-            type="text" // <-- changed "input" to "text"
+            type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             name="query"
             placeholder="Search Movies..."
           />
           {query && (
-            <button 
+            <button
+              type="button"
               className="clear-btn"
               onClick={clearQuery}
             >
@@ -90,22 +122,35 @@ export default function SearchMovie() {
       </form>
 
       <div className="moviescontainer">
-        {movies
-          .filter((movie) => movie.poster_path)
-          .map((movie) => (
-            <MovieCard movie={movie} key={movie.id} />
-          ))}
+        {movies.filter((movie) => movie.poster_path).map((movie) => (
+           <Link  key={movie.id}
+           to={{
+             pathname: `/movie/${movie.id}`,
+             search: `?q=${query}`,
+             state: {
+               from: location.pathname + (location.search || ''), // Important: Relative path
+             },
+           }}
+           className="card-link">
+          <MovieCard movie={movie}  />
+          </Link>
+        ))}
       </div>
 
-      {loading ? (
-        <Waypoint onEnter={loadMore}>
-          <h1 style={{ textAlign: "center", color: "#fff" }}>Loading...</h1>
-        </Waypoint>
-      ) : ""}
+      {loading && !movies.length ? (
+        <h1 style={{ textAlign: "center", color: "#fff" }}>Loading...</h1>
+      ) : null}
 
-      {(query && !movies.length && !loading) ? ( 
-                <h1 style={{ textAlign: "center", color: "#fff" }}>No results found</h1>
-              ) : ""} 
+      {doneSearching && query && !loading && !movies.length ? (
+        <h1 style={{ textAlign: "center", color: "#fff" }}>No results found</h1>
+      ) : null}
+
+      <Waypoint onEnter={loadMore}>
+        {hasNextPage && !loading ? (
+          <h1 style={{ textAlign: "center", color: "#fff" }}>Load more...</h1>
+        ) : null}
+      </Waypoint>
+
       <ScrollToTopBtn />
     </div>
   );
